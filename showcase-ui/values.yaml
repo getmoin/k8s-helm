@@ -3,7 +3,7 @@ namespace: default
 service:
   name: ui
   image:
-    repository: showcase-ui
+    repository: nginx
     tag: latest
   replicas: 1
   port: 80

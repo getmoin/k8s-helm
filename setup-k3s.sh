@@ -12,13 +12,13 @@ echo "Waiting for K3s to be ready..."
 sleep 30
 kubectl get nodes
 
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.yaml
+sudo kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.yaml
 
 echo "Waiting for cert-manager to be ready..."
 sleep 30
-kubectl get pods -n cert-manager
+sudo kubectl get pods -n cert-manager
 
-cat <<EOF | kubectl apply -f -
+cat <<EOF | sudo kubectl apply -f -
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:

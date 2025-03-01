@@ -3,8 +3,8 @@ namespace: showcase-ui-ns
 service:
   name: ui
   image:
-    repository: showcase-ui
-    tag: v0.1
+    repository: nginx
+    tag: latest
   replicas: 1
   port: 80
   path: /
