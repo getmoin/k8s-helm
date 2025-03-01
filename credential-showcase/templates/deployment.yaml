@@ -1,0 +1,36 @@
+{{- range .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-{{ .name }}
+  namespace: {{ $.Values.namespace }}
+spec:
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      app: {{ $.Release.Name }}-{{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $.Release.Name }}-{{ .name }}
+    spec:
+      containers:
+      - name: {{ .name }}
+        image: "{{ .image.repository }}:{{ .image.tag }}"
+        ports:
+        - containerPort: {{ .port }}
+        env:
+        {{- range $key, $value := .env }}
+        - name: {{ $key }}
+          {{- if kindIs "string" $value }}
+          value: {{ $value | quote }}
+          {{- else }}
+          {{- toYaml $value | nindent 10 }}
+          {{- end }}
+        {{- end }}
+        envFrom:
+        - configMapRef:
+            name: {{ $.Release.Name }}-config
+        resources: {{ toYaml .resources | nindent 12 }}
+---
+{{- end }}

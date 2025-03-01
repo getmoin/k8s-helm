@@ -1,0 +1,70 @@
+namespace: backend-ns
+
+backends:
+  - name: backend1
+    image:
+      repository: your-backend-image
+      tag: latest
+    replicas: 1
+    port: 8080
+    path: /api/v1
+    resources:
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+  
+  - name: backend2
+    image:
+      repository: your-backend2-image
+      tag: latest
+    replicas: 1
+    port: 8081
+    path: /api/v2
+    resources:
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+
+# Bitnami PostgreSQL configuration
+postgresql:
+  enabled: true
+  auth:
+    username: myuser
+    password: mysecretpassword
+    database: myappdb
+  primary:
+    resources:
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+    persistence:
+      size: 10Gi
+
+# Bitnami RabbitMQ configuration
+rabbitmq:
+  enabled: true
+  auth:
+    username: guest
+    password: rabbitsecret
+  resources:
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+  persistence:
+    size: 5Gi
+
+env:
+  dbHost: "{{ .Release.Name }}-postgresql"
+  rabbitHost: "{{ .Release.Name }}-rabbitmq"
