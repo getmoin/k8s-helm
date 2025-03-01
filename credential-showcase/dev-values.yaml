@@ -1,0 +1,105 @@
+namespace: credential-showcase-ns
+
+services:
+  - name: hello-world
+    image:
+      repository: hello-world
+      tag: v0.1
+    replicas: 1
+    port: 3787
+    path: /hello-world
+    env:
+      APP_NAME: hello-world
+      LOG_LEVEL: debug
+      API_KEY:
+        valueFrom:
+          secretKeyRef:
+            name: hello-world-api-key
+            key: API_KEY
+      AUTH_TOKEN:
+        valueFrom:
+          secretKeyRef:
+            name: hello-world-auth-token
+            key: AUTH_TOKEN
+    resources:
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+  
+  - name: weather-api
+    image:
+      repository: njpatel54/weatherapi
+      tag: 216
+    replicas: 1
+    port: 80
+    path: /api
+    env:
+      SERVICE_NAME: weather-service
+      WEATHER_API_URL: "https://api.weather.com"
+      DB_USER: dbuser
+      RABBIT_USER: rabbituser
+      WEATHER_API_KEY:
+        valueFrom:
+          secretKeyRef:
+            name: weather-api-key
+            key: WEATHER_API_KEY
+      DB_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: db-creds
+            key: DB_PASSWORD
+      RABBIT_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: rabbit-creds
+            key: RABBIT_PASSWORD
+    resources:
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+
+postgresql:
+  enabled: true
+  auth:
+    username: dbuser
+    password:
+      valueFrom:
+        secretKeyRef:
+          name: db-creds
+          key: DB_PASSWORD
+    database: devdb
+  primary:
+    resources:
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+    persistence:
+      size: 1Gi
+
+rabbitmq:
+  enabled: true
+  auth:
+    username: rabbituser
+    password:
+      valueFrom:
+        secretKeyRef:
+          name: rabbit-creds
+          key: RABBIT_PASSWORD
+  resources:
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+  persistence:
+    size: 1Gi  
