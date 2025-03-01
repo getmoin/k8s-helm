@@ -1,28 +1,14 @@
-namespace: backend-ns
+namespace: default
 
-backends:
-  - name: backend1
+services:
+  - name: hello-world
     image:
-      repository: your-backend-image
+      repository: hello-world
       tag: latest
     replicas: 1
-    port: 8080
-    path: /api/v1
-    resources:
-      limits:
-        cpu: "200m"
-        memory: "256Mi"
-      requests:
-        cpu: "100m"
-        memory: "128Mi"
-  
-  - name: backend2
-    image:
-      repository: your-backend2-image
-      tag: latest
-    replicas: 1
-    port: 8081
-    path: /api/v2
+    port: 3787
+    path: /hello-world
+    env: {}
     resources:
       limits:
         cpu: "200m"
@@ -31,13 +17,30 @@ backends:
         cpu: "100m"
         memory: "128Mi"
 
-# Bitnami PostgreSQL configuration
+
+  - name: weather-api
+    image:
+      repository: njpatel54/weatherapi
+      tag: latest
+    replicas: 1
+    port: 80
+    path: /api
+    env: {}
+    resources:
+      limits:
+        cpu: "200m"
+        memory: "256Mi"
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+
+
 postgresql:
-  enabled: true
+  enabled: false
   auth:
-    username: myuser
-    password: mysecretpassword
-    database: myappdb
+    username: ""
+    password: {}
+    database: ""
   primary:
     resources:
       limits:
@@ -47,14 +50,14 @@ postgresql:
         cpu: "100m"
         memory: "128Mi"
     persistence:
-      size: 10Gi
+      size: 1Gi
 
-# Bitnami RabbitMQ configuration
+
 rabbitmq:
-  enabled: true
+  enabled: false
   auth:
-    username: guest
-    password: rabbitsecret
+    username: ""
+    password: {}
   resources:
     limits:
       cpu: "200m"
@@ -63,8 +66,4 @@ rabbitmq:
       cpu: "100m"
       memory: "128Mi"
   persistence:
-    size: 5Gi
-
-env:
-  dbHost: "{{ .Release.Name }}-postgresql"
-  rabbitHost: "{{ .Release.Name }}-rabbitmq"
+    size: 1Gi 

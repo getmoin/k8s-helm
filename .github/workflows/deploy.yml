@@ -21,6 +21,9 @@ jobs:
           WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           RABBIT_PASSWORD: ${{ secrets.RABBIT_PASSWORD }}
+          # UI secrets
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+          UI_AUTH_TOKEN: ${{ secrets.UI_AUTH_TOKEN }}
         run: |
           chmod +x ./deploy-helm.sh
           ./deploy-helm.sh 

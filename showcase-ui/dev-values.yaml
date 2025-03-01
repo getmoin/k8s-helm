@@ -1,0 +1,30 @@
+namespace: showcase-ui-ns
+
+service:
+  name: ui
+  image:
+    repository: showcase-ui
+    tag: v0.1
+  replicas: 1
+  port: 80
+  path: /
+  env:
+    NODE_ENV: development
+    API_URL: "https://api.mydomain.com"
+    BACKEND_URL:
+      valueFrom:
+        secretKeyRef:
+          name: showcase-ui
+          key: BACKEND_URL
+    AUTH_TOKEN:
+      valueFrom:
+        secretKeyRef:
+          name: showcase-ui
+          key: AUTH_TOKEN
+  resources:
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi" 

@@ -1,0 +1,18 @@
+namespace: default
+
+service:
+  name: ui
+  image:
+    repository: showcase-ui
+    tag: latest
+  replicas: 1
+  port: 80
+  path: /
+  env: {}
+  resources:
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi" 
