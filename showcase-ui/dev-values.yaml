@@ -11,16 +11,8 @@ service:
   env:
     NODE_ENV: development
     API_URL: "https://api.mydomain.com"
-    BACKEND_URL:
-      valueFrom:
-        secretKeyRef:
-          name: showcase-ui
-          key: BACKEND_URL
-    AUTH_TOKEN:
-      valueFrom:
-        secretKeyRef:
-          name: showcase-ui
-          key: AUTH_TOKEN
+    BACKEND_API_KEY: $BACKEND_API_KEY
+    AUTH_TOKEN: $UI_AUTH_TOKEN
   resources:
     limits:
       cpu: "200m"

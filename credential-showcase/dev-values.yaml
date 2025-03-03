@@ -1,26 +1,18 @@
 namespace: credential-showcase-ns
 
 services:
-  - name: hello-world
+  - name: sampleapi
     image:
-      repository: hello-world
-      tag: v0.1
+      repository: souravkar/sampleapi
+      tag: 81
     replicas: 1
     port: 3787
-    path: /hello-world
+    path: /sampleapi
     env:
-      APP_NAME: hello-world
+      APP_NAME: sampleapi
       LOG_LEVEL: debug
-      API_KEY:
-        valueFrom:
-          secretKeyRef:
-            name: credential-showcase
-            key: API_KEY
-      AUTH_TOKEN:
-        valueFrom:
-          secretKeyRef:
-            name: credential-showcase
-            key: AUTH_TOKEN
+      API_KEY: $API_KEY
+      AUTH_TOKEN: $AUTH_TOKEN
     resources:
       limits:
         cpu: "200m"
@@ -35,28 +27,16 @@ services:
       repository: njpatel54/weatherapi
       tag: 216
     replicas: 1
-    port: 80
+    port: 8011
     path: /api
     env:
       SERVICE_NAME: weather-service
       WEATHER_API_URL: "https://api.weather.com"
       DB_USER: dbuser
       RABBIT_USER: rabbituser
-      WEATHER_API_KEY:
-        valueFrom:
-          secretKeyRef:
-            name: credential-showcase
-            key: WEATHER_API_KEY
-      DB_PASSWORD:
-        valueFrom:
-          secretKeyRef:
-            name: credential-showcase
-            key: DB_PASSWORD
-      RABBIT_PASSWORD:
-        valueFrom:
-          secretKeyRef:
-            name: credential-showcase
-            key: RABBIT_PASSWORD
+      WEATHER_API_KEY: $WEATHER_API_KEY
+      DB_PASSWORD: $DB_PASSWORD
+      RABBIT_PASSWORD: $RABBIT_PASSWORD
     resources:
       limits:
         cpu: "200m"
@@ -70,12 +50,8 @@ postgresql:
   enabled: true
   auth:
     username: dbuser
-    password:
-      valueFrom:
-        secretKeyRef:
-          name: credential-showcase
-          key: DB_PASSWORD
     database: devdb
+    password: "${DB_PASSWORD}"  
   primary:
     resources:
       limits:
@@ -86,17 +62,14 @@ postgresql:
         memory: "128Mi"
     persistence:
       size: 1Gi
+  namespaceOverride: credential-showcase-ns
 
 
 rabbitmq:
   enabled: true
   auth:
     username: rabbituser
-    password:
-      valueFrom:
-        secretKeyRef:
-          name: credential-showcase
-          key: RABBIT_PASSWORD
+    password: "${RABBIT_PASSWORD}"
   resources:
     limits:
       cpu: "200m"
@@ -105,4 +78,5 @@ rabbitmq:
       cpu: "100m"
       memory: "128Mi"
   persistence:
-    size: 1Gi  
+    size: 1Gi
+  namespaceOverride: credential-showcase-ns  
