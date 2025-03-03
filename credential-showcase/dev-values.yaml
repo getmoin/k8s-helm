@@ -46,6 +46,10 @@ services:
         memory: "128Mi"
 
 
+global:
+  namespaceOverride: credential-showcase-ns
+
+
 postgresql:
   enabled: true
   auth:
@@ -62,7 +66,6 @@ postgresql:
         memory: "128Mi"
     persistence:
       size: 1Gi
-  namespaceOverride: credential-showcase-ns
 
 
 rabbitmq:

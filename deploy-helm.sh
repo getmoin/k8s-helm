@@ -21,7 +21,7 @@ helm upgrade --install credential-showcase ./credential-showcase \
   --set postgresql.auth.password="$DB_PASSWORD" \
   --set rabbitmq.auth.password="$RABBIT_PASSWORD"
 
-helm upgrade --install showcase-ui ./showcase-ui -f ./showcase-ui/dev-values.yaml
+helm upgrade --install showcase-ui ./showcase-ui -f ./showcase-ui/dev-values.yaml \
   --set services[0].env.BACKEND_API_KEY="$BACKEND_API_KEY" \
   --set services[0].env.AUTH_TOKEN="$UI_AUTH_TOKEN"
 
