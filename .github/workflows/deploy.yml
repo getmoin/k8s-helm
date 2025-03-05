@@ -18,11 +18,12 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
           echo "Host instance
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/id_rsa
-            StrictHostKeyChecking yes" > ~/.ssh/config
+            StrictHostKeyChecking accept-new" > ~/.ssh/config
 
       # - name: Configure Kubernetes
       #   uses: azure/k8s-set-context@v1
