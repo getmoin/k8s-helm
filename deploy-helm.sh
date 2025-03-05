@@ -1,16 +1,32 @@
 #!/bin/bash
 
-# Add repositories and update dependencies
-# helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo update
+#SAMPLE ENV FILES
+# export HELLO_WORLD_API_KEY=KRTPWSXM
+# export HELLO_WORLD_AUTH_TOKEN=NBLVQYZH
+# export WEATHER_API_KEY=MFDHWPXR
+# export DB_PASSWORD=JTCVNKLS
+# export RABBIT_PASSWORD=QWXHMPVB
+# export BACKEND_API_KEY=YGFNBVPL
+# export UI_AUTH_TOKEN=XKJHWQRS
+
+if ! helm repo list | grep -q "bitnami"; then
+    echo "Adding bitnami helm repository..."
+    helm repo add bitnami https://charts.bitnami.com/bitnami
+    helm repo update
+else
+    echo "Bitnami repository already exists"
+fi
+
 cd credential-showcase
-helm dependency update
+if [ ! -f "charts/postgresql-12.5.7.tgz" ] || [ ! -f "charts/rabbitmq-11.16.0.tgz" ]; then
+    echo "Required dependencies not found or versions don't match. Updating dependencies..."
+    helm dependency update
+else
+    echo "Dependencies already exist with correct versions"
+fi
 cd ..
 
 # Deploy applications
-# helm upgrade --install credential-showcase ./credential-showcase -f ./credential-showcase/dev-values.yaml
-
 helm upgrade --install credential-showcase ./credential-showcase \
   -f ./credential-showcase/dev-values.yaml \
   --set services[0].env.API_KEY="$HELLO_WORLD_API_KEY" \

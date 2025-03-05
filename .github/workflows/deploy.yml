@@ -1,7 +1,7 @@
 name: Deploy to Kubernetes
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev]
 
 jobs:
   deploy:
@@ -9,10 +9,25 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Configure Kubernetes
-        uses: azure/k8s-set-context@v1
-        with:
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "Host instance
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/id_rsa
+            StrictHostKeyChecking yes" > ~/.ssh/config
+
+      # - name: Configure Kubernetes
+      #   uses: azure/k8s-set-context@v1
+      #   with:
+      #     kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
       - name: Deploy to cluster
         env:
@@ -24,5 +39,4 @@ jobs:
           BACKEND_API_KEY: ${{ secrets.BACKEND_API_KEY }}
           UI_AUTH_TOKEN: ${{ secrets.UI_AUTH_TOKEN }}
         run: |
-          chmod +x ./deploy-helm.sh
-          ./deploy-helm.sh 
+          ssh instance 'bash -s' < ./deploy-helm.sh 

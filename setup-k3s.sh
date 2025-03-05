@@ -12,6 +12,8 @@ echo "Waiting for K3s to be ready..."
 sleep 30
 kubectl get nodes
 
+snap install helm --classic
+
 sudo kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.yaml
 
 echo "Waiting for cert-manager to be ready..."
