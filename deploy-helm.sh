@@ -9,6 +9,9 @@
 # export BACKEND_API_KEY=YGFNBVPL
 # export UI_AUTH_TOKEN=XKJHWQRS
 
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+ls -la
+
 if ! helm repo list | grep -q "bitnami"; then
     echo "Adding bitnami helm repository..."
     helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -17,7 +20,8 @@ else
     echo "Bitnami repository already exists"
 fi
 
-cd credential-showcase
+cd /home/nbadmin/k8s-helm/credential-showcase
+
 if [ ! -f "charts/postgresql-12.5.7.tgz" ] || [ ! -f "charts/rabbitmq-11.16.0.tgz" ]; then
     echo "Required dependencies not found or versions don't match. Updating dependencies..."
     helm dependency update
