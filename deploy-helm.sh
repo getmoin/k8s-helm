@@ -9,6 +9,7 @@
 # export BACKEND_API_KEY=YGFNBVPL
 # export UI_AUTH_TOKEN=XKJHWQRS
 
+sudo su
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 ls -la
 
